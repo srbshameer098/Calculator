@@ -18,14 +18,25 @@ class buttons extends StatelessWidget {
       child: Container(
         color: color,
 
-        child: Center(
-          child: Text(
-            buttonText,style:
-          TextStyle(color: textcolor,fontSize: 26.sp,
-          fontWeight: FontWeight.w600),),
+        child: InkWell(
+          onTap: () =>onBtnTap(buttonText),
+          child: Center(
+            child: Text(
+              buttonText,style:
+            TextStyle(color: textcolor,fontSize: 28.sp,
+            fontWeight: FontWeight.w500),
+            ),
+          ),
         ),
       ),
     );
   }
+
+
+
+
+
+
 }
+
 
