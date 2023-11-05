@@ -13,14 +13,16 @@ class buttons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  ClipRect(
-
-      borderRadius:BorderRadius.circular(20),
+    return  ClipRRect(
+      borderRadius:BorderRadius.circular(60),
       child: Container(
         color: color,
 
         child: Center(
-          child: Text(buttonText,style: TextStyle(color: textcolor),),
+          child: Text(
+            buttonText,style:
+          TextStyle(color: textcolor,fontSize: 26.sp,
+          fontWeight: FontWeight.w600),),
         ),
       ),
     );

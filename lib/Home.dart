@@ -9,6 +9,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final List <String> button =
+      [
+        'C' , '%' , '←' , '÷' ,
+        '7' , '8' , '9' , 'X' ,
+        '4' , '5' , '6' , '-' ,
+        '1' , '2' , '3' , '+' ,
+        '00' , '0' , '.' , '=' ,
+      ];
+
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
@@ -22,11 +32,20 @@ class _HomeState extends State<Home> {
             flex: 2,
               child: Container(
                 color: Color(0xff000000),
-                child: Center(
-                  child: buttons(
-                      buttonText: '1',
-                    textcolor: Colors.white,
-                  ),
+                child: GridView.builder(
+                  itemCount: button.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+                  itemBuilder: (BuildContext context,int index){
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: buttons(
+                            buttonText: button[index],
+                          color:isOperator(button[index])?
+                          color: Colors.grey.shade800,
+                          textcolor: Colors.white,
+                        ),
+                      );
+                  }
                 ),
 
 
@@ -36,5 +55,11 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+  bool isOperator(String x){
+    if (x=='%'|| x == '/' || x == 'X' || x =='+' || x == '-' || x == '=' ){
+      return true;
+    }
+    return false;
   }
 }
