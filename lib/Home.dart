@@ -1,7 +1,9 @@
 import 'package:calculator/buttons.dart';
+import 'package:calculator/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:provider/provider.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -10,9 +12,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String num1 ="";
-  String operand ="";
-  String ans ="";
+
 
   final List <String> button =
       [
@@ -32,31 +32,43 @@ class _HomeState extends State<Home> {
         child: Column(
           children: <Widget> [
             Expanded(
-                child: Container(alignment: Alignment.centerRight,
-                  child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding:  EdgeInsets.only(top: 100.h),
-                        child: Text(
+                child: Consumer<A>(
+                  builder: (BuildContext context, value, Widget? child) {
+                  return Container(alignment: Alignment.centerRight,
+                    child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding:  EdgeInsets.only(top: 100.h),
+                          child: Consumer<A>(
+                            builder: (BuildContext context,  value, Widget? child) { return Text(
 
-                            "$num1$operand" ,
-                          style: TextStyle(color: Colors.white,fontSize: 24.sp),
+                              "${value.num1}.${value.operand}" ,
+                              style: TextStyle(color: Colors.white,fontSize: 24.sp),
+                            ); },
+
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding:  EdgeInsets.only(top: 30.h),
-                        child: Text(
-                          "$ans",
-                          style: TextStyle(
-                              fontSize: 30.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
+                        Padding(
+                          padding:  EdgeInsets.only(top: 30.h),
+                          child: Consumer<A>(
+                            builder: (BuildContext context,  value, Widget? child) {
+                              return Text(
+                                "${value.ans}",
+                                style: TextStyle(
+                                    fontSize: 30.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              );
+                            },
+
+                          ),
                         ),
-                      ),
 
-                    ],
-                  ),
+                      ],
+                    ),
 
+                  );
+                  },
                 ),
             ),
             Expanded(
@@ -72,6 +84,7 @@ class _HomeState extends State<Home> {
                         if (index == 19) {
                           return buttons(
                             buttontapped: () {
+
                               equalPressed();
 
                             },
@@ -84,11 +97,7 @@ class _HomeState extends State<Home> {
                         else if (index == 0) {
                           return buttons(
                             buttontapped: () {
-                              setState(() {
-                                num1 = '';
-                                operand = '';
-                                ans = '0';
-                              });
+                              Provider.of<A>(context, listen: false).changeValue();
                             },
                             buttonText: button[index],
                             color: isOperator(button[index]) ? Colors.grey
@@ -103,10 +112,7 @@ class _HomeState extends State<Home> {
                         else if (index == 1) {
                           return buttons(
                             buttontapped: () {
-                              setState(() {
-                                num1 =
-                                    num1.substring(0, num1.length - 1);
-                              });
+                              Provider.of<A>(context, listen: false).changeValue1();
                             },
                             buttonText: button[index],
                             color: isOperator(button[index]) ? Colors.grey
@@ -123,9 +129,7 @@ class _HomeState extends State<Home> {
                             padding: const EdgeInsets.all(5.0),
                             child: buttons(
                               buttontapped: () {
-                                setState(() {
-                                  num1 += button[index];
-                                });
+                                Provider.of<A>(context, listen: false).changeValue2(button,index);
                               },
                               buttonText: button[index],
                               color: isOperator(button[index]) ?
@@ -161,16 +165,21 @@ class _HomeState extends State<Home> {
   }
 
 // function to calculate the input operation
-  void equalPressed() {
-    String finaluserinput = num1;
-    finaluserinput = num1.replaceAll('X', '*', ).replaceAll('÷', '/');
+//   void equalPressed() {
+//     String finaluserinput = num1;
+//     finaluserinput = num1.replaceAll('X', '*', ).replaceAll('÷', '/');
+//
+//     Parser p = Parser();
+//     Expression exp = p.parse(finaluserinput);
+//     ContextModel cm = ContextModel();
+//     double eval = exp.evaluate(EvaluationType.REAL, cm);
+//     setState(() {
+//       ans = eval.toString();
+//     });
+  equalPressed(){
 
-    Parser p = Parser();
-    Expression exp = p.parse(finaluserinput);
-    ContextModel cm = ContextModel();
-    double eval = exp.evaluate(EvaluationType.REAL, cm);
-    setState(() {
-      ans = eval.toString();
-    });
+    Provider.of<A>(context, listen: false).equalPressed();
+  }
 
-}}
+
+}
