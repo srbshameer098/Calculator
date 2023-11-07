@@ -12,7 +12,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   String num1 ="";
   String operand ="";
-  String num2 ="";
   String ans ="";
 
   final List <String> button =
@@ -34,11 +33,30 @@ class _HomeState extends State<Home> {
           children: <Widget> [
             Expanded(
                 child: Container(alignment: Alignment.centerRight,
-                  child: Text(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding:  EdgeInsets.only(top: 100.h),
+                        child: Text(
 
-                      "$num1$num2$operand" ,
-                    style: TextStyle(color: Colors.white,fontSize: 24.sp),
+                            "$num1$operand" ,
+                          style: TextStyle(color: Colors.white,fontSize: 24.sp),
+                        ),
+                      ),
+                      Padding(
+                        padding:  EdgeInsets.only(top: 30.h),
+                        child: Text(
+                          "$ans",
+                          style: TextStyle(
+                              fontSize: 30.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+
+                    ],
                   ),
+
                 ),
             ),
             Expanded(
@@ -50,71 +68,78 @@ class _HomeState extends State<Home> {
                     child: GridView.builder(
                       itemCount: button.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                      itemBuilder: (BuildContext context,int index){
-                        if (index == 19){
+                      itemBuilder: (BuildContext context,int index) {
+                        if (index == 19) {
                           return buttons(
-                            buttontapped: (){
+                            buttontapped: () {
+                              equalPressed();
+
+                            },
+                            buttonText: button[index],
+                            color: Colors.orange,
+
+                            textcolor: Colors.white,
+                          );
+                        }
+                        else if (index == 0) {
+                          return buttons(
+                            buttontapped: () {
                               setState(() {
                                 num1 = '';
-                                num2 = '';
+                                operand = '';
                                 ans = '0';
                               });
                             },
                             buttonText: button[index],
-                            color:  Colors.orange,
+                            color: isOperator(button[index]) ? Colors.grey
+                                .shade800 : Colors.grey.shade900,
 
-                            textcolor:   Colors.white ,
+                            textcolor: isOperator(button[index])
+                                ? Colors.white
+                                : Colors.white,
+
                           );
                         }
-                       else if (index == 0){
+                        else if (index == 1) {
                           return buttons(
-                            buttontapped: (){
+                            buttontapped: () {
                               setState(() {
-                                num1 = '';
-                                operand ='';
-                                num2 = '';
-                                ans = '0';
+                                num1 =
+                                    num1.substring(0, num1.length - 1);
                               });
                             },
                             buttonText: button[index],
-                            color:isOperator(button[index])?  Colors.grey.shade800 : Colors.grey.shade900,
+                            color: isOperator(button[index]) ? Colors.grey
+                                .shade800 : Colors.grey.shade900,
 
-                            textcolor: isOperator(button[index])?  Colors.white : Colors.white,
-
-                          );
-                        }
-                        else if (index == 1){
-                          return buttons(
-                            buttontapped: (){
-                              setState(() {
-                                num1 = 
-                                num1.substring(0,num1.length-1) ;
-                              
-                              });
-                            },
-                            buttonText: button[index],
-                            color:isOperator(button[index])?  Colors.grey.shade800 : Colors.grey.shade900,
-
-                            textcolor: isOperator(button[index])?  Colors.white : Colors.white,
+                            textcolor: isOperator(button[index])
+                                ? Colors.white
+                                : Colors.white,
 
                           );
                         }
+                        else {
                           return Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: buttons(
-                              buttontapped:() {
+                              buttontapped: () {
                                 setState(() {
-                                  operand += button[index];
+                                  num1 += button[index];
                                 });
                               },
-                                buttonText: button[index],
-                              color:isOperator(button[index])?  Colors.grey.shade800 : Colors.grey.shade900,
+                              buttonText: button[index],
+                              color: isOperator(button[index]) ?
+                              Colors.grey.shade800 :
+                              Colors.grey.shade900,
 
-                              textcolor: isOperator(button[index])?  Colors.white : Colors.white,
+                              textcolor: isOperator(button[index]) ?
+                              Colors.white :
+                              Colors.white,
                             ),
                           );
+                        }
                       }
-                    ),
+                      ),
 
 
                   ),
@@ -129,7 +154,7 @@ class _HomeState extends State<Home> {
 
 
   bool isOperator(String x) {
-    if (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=') {
+    if (x == '÷' || x == 'X' || x == '-' || x == '+' || x == '=' || x == '%') {
       return true;
     }
     return false;
@@ -138,11 +163,14 @@ class _HomeState extends State<Home> {
 // function to calculate the input operation
   void equalPressed() {
     String finaluserinput = num1;
-    finaluserinput = num1.replaceAll('x', '*');
+    finaluserinput = num1.replaceAll('X', '*', ).replaceAll('÷', '/');
 
     Parser p = Parser();
     Expression exp = p.parse(finaluserinput);
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
-    ans = eval.toString();
+    setState(() {
+      ans = eval.toString();
+    });
+
 }}
